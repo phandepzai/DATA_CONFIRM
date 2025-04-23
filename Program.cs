@@ -219,12 +219,12 @@ namespace DATA_CONFIRM
 
             // Thêm Label cho tên tác giả
             VerticalLabel lblAuthor = new VerticalLabel("Tác giả: Nông Văn Phấn");
-            lblAuthor.Font = new Font("Tahoma", 8F, FontStyle.Regular);
+            lblAuthor.Font = new Font("Tahoma", 7F, FontStyle.Regular);
             lblAuthor.ForeColor = Color.Gray;
             lblAuthor.BackColor = Color.Transparent;
             lblAuthor.AutoSize = false;
             lblAuthor.Size = new Size(20, 150);
-            lblAuthor.Location = new Point(this.ClientSize.Width - 20, this.ClientSize.Height - 140);
+            lblAuthor.Location = new Point(this.ClientSize.Width - 20, this.ClientSize.Height - 130);
             this.Controls.Add(lblAuthor);
             lblAuthor.BringToFront();
             this.Resize += (s, e) =>
