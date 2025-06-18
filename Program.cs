@@ -17,14 +17,15 @@ namespace DATA_CONFIRM
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+            Application.EnableVisualStyles(); // Kích hoạt kiểu giao diện hiện đại
+            Application.SetCompatibleTextRenderingDefault(false); // Cấu hình chế độ vẽ văn bản
+            Application.Run(new MainForm()); // Chạy form chính
         }
     }
 
     public class MainForm : Form
     {
+        // Danh sách các lỗi có thể chọn
         private static readonly string[] ErrorNames = new string[]
         {
             "Lỗi hàn thiếu", "Lỗi hàn thừa", "Lỗi hàn lệch", "Lỗi hàn nguội",
@@ -45,6 +46,7 @@ namespace DATA_CONFIRM
             "Lỗi vết ố", "Lỗi vết bẩn", "Lỗi vết xước", "Lỗi vết lõm"
         };
 
+        // Danh sách các mẫu (Pattern) có thể chọn
         private static readonly string[] PatternNames = new string[]
         {
             "Pattern 1", "Pattern 2", "Pattern 3", "Pattern 4", "Pattern 5",
@@ -55,62 +57,72 @@ namespace DATA_CONFIRM
             "Pattern 26", "Pattern 27", "Pattern 28", "Pattern 29", "Pattern 30"
         };
 
-        private TextBox txtAPN;
-        private TextBox[] txtCoordinatesX;
-        private TextBox[] txtCoordinatesY;
-        private TextBox txtSelectedError;
-        private TextBox txtSelectedPattern;
-        private TextBox txtSelectedLevel;
-        private Button btnSelectError;
-        private Button btnSelectPattern;
-        private Button btnSelectLevel;
-        private Button btnSave;
-        private Button btnReset;
-        private Panel numericKeyboard;
-        private LinkLabel lblStatus;
-        private Label lblDateTime;
-        private Label lblAPNCount;
+        // Danh sách các mức độ (Level) có thể chọn
+        private static readonly string[] LevelNames = new string[]
+        {
+            "Rất yếu", "Yếu", "Vừa", "Mạnh", "Rất Mạnh",
+            "Lv0.1", "Lv0.2", "Lv0.3", "Lv0.4", "Lv0.5", "Lv0.6", "Lv0.7", "Lv0.8", "Lv0.9", "Lv1.0",
+            "Lv1.1", "Lv1.2", "Lv1.3", "Lv1.4", "Lv1.5", "Lv1.6", "Lv1.7", "Lv1.8", "Lv1.9", "Lv2.0",
+            "Lv2.1", "Lv2.2", "Lv2.3", "Lv2.4", "Lv2.5", "Lv2.6", "Lv2.7", "Lv2.8", "Lv2.9", "Lv3.0",
+            "Lv3.1", "Lv3.2", "Lv3.3", "Lv3.4", "Lv3.5", "Lv3.6", "Lv3.7", "Lv3.8", "Lv3.9", "Lv4.0",
+            "Lv4.1", "Lv4.2", "Lv4.3", "Lv4.4", "Lv4.5", "Lv4.6", "Lv4.7", "Lv4.8", "Lv4.9", "Lv5.0",
+            "Rất yếu", "Yếu", "Vừa", "Mạnh", "Rất Mạnh",
+            "Rất yếu", "Yếu", "Vừa", "Mạnh", "Rất Mạnh",
+        };
+
+        private TextBox txtAPN; // TextBox để nhập mã APN
+        private TextBox[] txtCoordinatesX; // Mảng TextBox để nhập tọa độ X
+        private TextBox[] txtCoordinatesY; // Mảng TextBox để nhập tọa độ Y
+        private TextBox txtSelectedError; // TextBox hiển thị lỗi đã chọn
+        private TextBox txtSelectedPattern; // TextBox hiển thị mẫu (Pattern) đã chọn
+        private TextBox txtSelectedLevel; // TextBox hiển thị mức độ (Level) đã chọn
+        private TextBox txtSelectedPosition; // TextBox hiển thị vị trí lỗi đã chọn
+        private Button btnSelectError; // Nút để mở form chọn lỗi
+        private Button btnSelectPattern; // Nút để mở form chọn mẫu
+        private Button btnSelectLevel; // Nút để mở form chọn mức độ
+        private Button btnSelectPosition; // Nút để mở form chọn vị trí lỗi
+        private Button btnSave; // Nút để lưu dữ liệu vào file CSV
+        private Button btnReset; // Nút để xóa tất cả dữ liệu nhập
+        private Panel numericKeyboard; // Bàn phím số ảo
+        private LinkLabel lblStatus; // Nhãn hiển thị trạng thái (thành công/lỗi)
+        private Label lblDateTime; // Nhãn hiển thị thời gian lưu gần nhất
+        private Label lblAPNCount; // Nhãn hiển thị số lượng cell đã lưu
 
         public MainForm()
         {
-            InitializeComponent();
-            InitializeNumericKeyboard();
-            UpdateAPNCount();
-            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("FORM_NHAP_DATA.icon.ico"))
-            {
-                if (stream != null)
-                {
-                    this.Icon = new Icon(stream);
-                }
-            }
+            InitializeComponent(); // Khởi tạo các thành phần giao diện
+            InitializeNumericKeyboard(); // Khởi tạo bàn phím số
+            UpdateAPNCount(); // Cập nhật số lượng cell đã lưu
             try
             {
                 using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("FORM_NHAP_DATA.icon.ico"))
                 {
                     if (stream != null)
                     {
-                        this.Icon = new Icon(stream);
+                        this.Icon = new Icon(stream); // Đặt biểu tượng cho form
                     }
                     else
                     {
-                        MessageBox.Show("Không tìm thấy tài nguyên icon.ico");
+                        MessageBox.Show("Không tìm thấy tài nguyên icon.ico"); // Thông báo nếu không tìm thấy icon
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi tải biểu tượng: " + ex.Message);
+                MessageBox.Show("Lỗi tải biểu tượng: " + ex.Message); // Thông báo lỗi nếu xảy ra
             }
         }
 
+        // Khởi tạo các thành phần giao diện của form chính
         private void InitializeComponent()
         {
-            this.Text = "DATA CONFIRM";
-            this.Size = new Size(450, 580);
-            this.StartPosition = FormStartPosition.CenterScreen;
-            this.FormBorderStyle = FormBorderStyle.FixedSingle; // Ngăn kéo dãn cửa sổ 
-            this.MaximizeBox = false; // Vô hiệu hóa nút phóng to
+            this.Text = "DATA CONFIRM"; // Tiêu đề form
+            this.Size = new Size(450, 580); // Kích thước form
+            this.StartPosition = FormStartPosition.CenterScreen; // Căn giữa form
+            this.FormBorderStyle = FormBorderStyle.FixedSingle; // Không cho phép thay đổi kích thước
+            this.MaximizeBox = false; // Ẩn nút phóng to
 
+            // Nhãn "APN"
             Label lblAPN = new Label();
             lblAPN.Text = "APN:";
             lblAPN.Location = new Point(20, 18);
@@ -118,26 +130,29 @@ namespace DATA_CONFIRM
             lblAPN.AutoSize = true;
             this.Controls.Add(lblAPN);
 
+            // TextBox nhập mã APN
             txtAPN = new TextBox();
             txtAPN.Location = new Point(60, 10);
-            txtAPN.Size = new Size(340, 40);
-            txtAPN.Font = new Font("Arial", 16F);
+            txtAPN.Size = new Size(360, 40);
+            txtAPN.Font = new Font("Arial", 15F);
             txtAPN.MaxLength = 300;
             txtAPN.KeyDown += (s, e) =>
             {
                 if (e.KeyCode == Keys.Enter)
                 {
-                    txtCoordinatesX[0].Focus();
-                    e.SuppressKeyPress = true;
+                    txtCoordinatesX[0].Focus(); // Chuyển focus sang ô X1 khi nhấn Enter
+                    e.SuppressKeyPress = true; // Ngăn âm thanh mặc định khi nhấn Enter
                 }
             };
             this.Controls.Add(txtAPN);
 
-            txtCoordinatesX = new TextBox[5];
-            txtCoordinatesY = new TextBox[5];
+            // Khởi tạo mảng TextBox cho tọa độ X và Y (4 cặp)
+            txtCoordinatesX = new TextBox[4];
+            txtCoordinatesY = new TextBox[4];
 
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 4; i++)
             {
+                // Nhãn cho tọa độ X
                 Label lblX = new Label();
                 lblX.Text = $"X{i + 1}:";
                 lblX.Location = new Point(25, 67 + i * 40);
@@ -145,15 +160,17 @@ namespace DATA_CONFIRM
                 lblX.Font = new Font("Arial", 9F, FontStyle.Bold);
                 this.Controls.Add(lblX);
 
+                // TextBox cho tọa độ X
                 txtCoordinatesX[i] = new TextBox();
                 txtCoordinatesX[i].Location = new Point(50, 60 + i * 40);
                 txtCoordinatesX[i].Size = new Size(60, 40);
                 txtCoordinatesX[i].Font = new Font("Arial", 12F, FontStyle.Bold);
                 txtCoordinatesX[i].TextAlign = HorizontalAlignment.Center;
-                txtCoordinatesX[i].Click += TextBox_Click;
-                txtCoordinatesX[i].KeyPress += ValidateNumericInput;
+                txtCoordinatesX[i].Click += TextBox_Click; // Gán sự kiện click để kích hoạt bàn phím số
+                txtCoordinatesX[i].KeyPress += ValidateNumericInput; // Gán sự kiện kiểm tra đầu vào số
                 this.Controls.Add(txtCoordinatesX[i]);
 
+                // Nhãn cho tọa độ Y
                 Label lblY = new Label();
                 lblY.Text = $"Y{i + 1}:";
                 lblY.Location = new Point(125, 67 + i * 40);
@@ -161,40 +178,63 @@ namespace DATA_CONFIRM
                 lblY.Font = new Font("Arial", 9F, FontStyle.Bold);
                 this.Controls.Add(lblY);
 
+                // TextBox cho tọa độ Y
                 txtCoordinatesY[i] = new TextBox();
                 txtCoordinatesY[i].Location = new Point(150, 60 + i * 40);
                 txtCoordinatesY[i].Size = new Size(60, 40);
                 txtCoordinatesY[i].Font = new Font("Arial", 12F, FontStyle.Bold);
                 txtCoordinatesY[i].TextAlign = HorizontalAlignment.Center;
-                txtCoordinatesY[i].Click += TextBox_Click;
-                txtCoordinatesY[i].KeyPress += ValidateNumericInput;
+                txtCoordinatesY[i].Click += TextBox_Click; // Gán sự kiện click để kích hoạt bàn phím số
+                txtCoordinatesY[i].KeyPress += ValidateNumericInput; // Gán sự kiện kiểm tra đầu vào số
                 this.Controls.Add(txtCoordinatesY[i]);
             }
 
+            // Nút để mở form chọn vị trí lỗi
+            btnSelectPosition = new Button();
+            btnSelectPosition.Text = "VỊ TRÍ LỖI";
+            btnSelectPosition.Location = new Point(40, 220);
+            btnSelectPosition.Size = new Size(80, 40);
+            btnSelectPosition.Font = new Font("Arial", 9F, FontStyle.Bold);
+            btnSelectPosition.Click += BtnSelectPosition_Click; // Gán sự kiện click
+            this.Controls.Add(btnSelectPosition);
+
+            // TextBox hiển thị vị trí lỗi đã chọn
+            txtSelectedPosition = new TextBox();
+            txtSelectedPosition.Location = new Point(130, 225);
+            txtSelectedPosition.Size = new Size(80, 30);
+            txtSelectedPosition.Font = new Font("Arial", 11F, FontStyle.Bold);
+            txtSelectedPosition.ReadOnly = true; // Chỉ đọc, giá trị được lấy từ form chọn vị trí
+            this.Controls.Add(txtSelectedPosition);
+
+            // Tạo các nút và TextBox cho Tên lỗi, Mức độ, Pattern
             CreateSelectionControls("TÊN LỖI", 260, ref txtSelectedError, ref btnSelectError);
             CreateSelectionControls("LEVEL", 300, ref txtSelectedLevel, ref btnSelectLevel);
             CreateSelectionControls("PATTERN", 340, ref txtSelectedPattern, ref btnSelectPattern);
 
+            // Nút Xác nhận để lưu dữ liệu
             btnSave = new Button();
             btnSave.Text = "XÁC NHẬN";
             btnSave.Location = new Point(100, 400);
             btnSave.Size = new Size(100, 40);
-            btnSave.Click += BtnSave_Click;
+            btnSave.Click += BtnSave_Click; // Gán sự kiện click để lưu dữ liệu
             this.Controls.Add(btnSave);
 
+            // Nút Reset để xóa dữ liệu nhập
             btnReset = new Button();
             btnReset.Text = "RESET";
             btnReset.Location = new Point(240, 400);
             btnReset.Size = new Size(100, 40);
-            btnReset.Click += BtnReset_Click;
+            btnReset.Click += BtnReset_Click; // Gán sự kiện click để xóa dữ liệu
             this.Controls.Add(btnReset);
 
+            // Nhãn hiển thị thời gian lưu gần nhất
             lblDateTime = new Label();
             lblDateTime.Location = new Point(20, 480);
             lblDateTime.Size = new Size(320, 20);
             lblDateTime.TextAlign = ContentAlignment.MiddleLeft;
             this.Controls.Add(lblDateTime);
 
+            // Nhãn hiển thị trạng thái (thành công/lỗi)
             lblStatus = new LinkLabel();
             lblStatus.Location = new Point(20, 500);
             lblStatus.Size = new Size(320, 40);
@@ -203,9 +243,10 @@ namespace DATA_CONFIRM
             lblStatus.LinkColor = Color.Blue;
             lblStatus.ActiveLinkColor = Color.Red;
             lblStatus.LinkBehavior = LinkBehavior.HoverUnderline;
-            lblStatus.LinkClicked += LblStatus_LinkClicked;
+            lblStatus.LinkClicked += LblStatus_LinkClicked; // Gán sự kiện click để mở thư mục
             this.Controls.Add(lblStatus);
 
+            // Nhãn hiển thị số lượng cell đã lưu
             lblAPNCount = new Label();
             lblAPNCount.Location = new Point(50, 450);
             lblAPNCount.Size = new Size(320, 20);
@@ -213,11 +254,12 @@ namespace DATA_CONFIRM
             lblAPNCount.Text = "Số cell đã lưu: 0";
             this.Controls.Add(lblAPNCount);
 
+            // Gán các sự kiện click cho các nút chọn
             btnSelectError.Click += BtnSelectError_Click;
             btnSelectLevel.Click += BtnSelectLevel_Click;
             btnSelectPattern.Click += BtnSelectPattern_Click;
 
-            // Thêm Label cho tên tác giả
+            // Nhãn hiển thị tên tác giả (xoay dọc)
             VerticalLabel lblAuthor = new VerticalLabel("Tác giả: Nông Văn Phấn");
             lblAuthor.Font = new Font("Tahoma", 7F, FontStyle.Regular);
             lblAuthor.ForeColor = Color.Gray;
@@ -227,12 +269,14 @@ namespace DATA_CONFIRM
             lblAuthor.Location = new Point(this.ClientSize.Width - 20, this.ClientSize.Height - 130);
             this.Controls.Add(lblAuthor);
             lblAuthor.BringToFront();
+            // Cập nhật vị trí nhãn tác giả khi form thay đổi kích thước
             this.Resize += (s, e) =>
             {
                 lblAuthor.Location = new Point(this.ClientSize.Width - 15, this.ClientSize.Height - 140);
             };
         }
 
+        // Tạo nút và TextBox cho các mục chọn (Tên lỗi, Mức độ, Pattern)
         private void CreateSelectionControls(string labelText, int top, ref TextBox textBox, ref Button button)
         {
             button = new Button();
@@ -247,10 +291,11 @@ namespace DATA_CONFIRM
             textBox.Size = new Size(280, 55);
             textBox.Font = new Font("Arial", 12F);
             textBox.TextAlign = HorizontalAlignment.Left;
-            textBox.ReadOnly = true;
+            textBox.ReadOnly = true; // Chỉ đọc
             this.Controls.Add(textBox);
         }
 
+        // Khởi tạo bàn phím số ảo
         private void InitializeNumericKeyboard()
         {
             numericKeyboard = new Panel();
@@ -266,6 +311,7 @@ namespace DATA_CONFIRM
             int buttonHeight = 40;
             int spacing = 9;
 
+            // Tạo các nút số và nút Xóa
             for (int i = 0; i < numbers.Length; i++)
             {
                 Button btn = new Button();
@@ -284,11 +330,12 @@ namespace DATA_CONFIRM
                 btn.FlatAppearance.MouseDownBackColor = Color.FromArgb(240, 240, 240);
                 btn.FlatAppearance.MouseOverBackColor = Color.FromArgb(245, 245, 245);
                 btn.Cursor = Cursors.Hand;
-                btn.Click += NumericButton_Click;
+                btn.Click += NumericButton_Click; // Gán sự kiện click cho nút
                 numericKeyboard.Controls.Add(btn);
             }
         }
 
+        // Xử lý sự kiện click vào các nút trên bàn phím số
         private void NumericButton_Click(object sender, EventArgs e)
         {
             Button btn = (Button)sender;
@@ -296,24 +343,26 @@ namespace DATA_CONFIRM
             {
                 if (activeTextBox != null && !string.IsNullOrEmpty(activeTextBox.Text))
                 {
-                    activeTextBox.Text = activeTextBox.Text.Substring(0, activeTextBox.Text.Length - 1);
+                    activeTextBox.Text = activeTextBox.Text.Substring(0, activeTextBox.Text.Length - 1); // Xóa ký tự cuối
                 }
             }
             else
             {
                 if (activeTextBox != null)
                 {
-                    activeTextBox.Text += btn.Text;
+                    activeTextBox.Text += btn.Text; // Thêm số hoặc dấu chấm vào TextBox
                 }
             }
         }
 
-        private TextBox activeTextBox = null;
+        private TextBox activeTextBox = null; // Lưu TextBox đang được focus
+
+        // Hiển thị form chọn (Tên lỗi, Mức độ, hoặc Pattern)
         private void ShowSelectionForm(string type, TextBox targetTextBox)
         {
             using (Form selectionForm = new Form())
             {
-                selectionForm.Text = "CHỌN " + type;
+                selectionForm.Text = "CHỌN " + type; // Tiêu đề form
                 selectionForm.StartPosition = FormStartPosition.CenterParent;
                 selectionForm.ShowInTaskbar = false;
                 selectionForm.FormBorderStyle = FormBorderStyle.FixedDialog;
@@ -321,31 +370,29 @@ namespace DATA_CONFIRM
                 selectionForm.MinimizeBox = false;
                 selectionForm.TopMost = true;
 
-                if (type == "MỨC ĐỘ") // Thêm 'if' vào đây
+                if (type == "MỨC ĐỘ")
                 {
+                    // Tạo bảng để hiển thị các mức độ
                     TableLayoutPanel tablePanel = new TableLayoutPanel();
                     tablePanel.Dock = DockStyle.Fill;
                     tablePanel.ColumnCount = 5;
-                    tablePanel.RowCount = 11; // Tăng số hàng lên để thêm các nút mới
+                    tablePanel.RowCount = (int)Math.Ceiling((double)LevelNames.Length / tablePanel.ColumnCount);
                     tablePanel.Padding = new Padding(5);
 
-                    for (int i = 0; i < 5; i++)
+                    for (int i = 0; i < tablePanel.ColumnCount; i++)
                     {
-                        tablePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+                        tablePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F / tablePanel.ColumnCount));
                     }
-                    for (int i = 0; i < 11; i++) // Tăng số hàng để chứa các nút mới
+                    for (int i = 0; i < tablePanel.RowCount; i++)
                     {
-                        tablePanel.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
+                        tablePanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F / tablePanel.RowCount));
                     }
 
                     selectionForm.Controls.Add(tablePanel);
-                    selectionForm.Size = new Size(500, 640); // Tăng chiều cao để phù hợp với nội dung mới
+                    selectionForm.Size = new Size(500, tablePanel.RowCount * 50 + 50);
 
                     int buttonIndex = 0;
-
-                    // Thêm các nút "Rất yếu", "Yếu", "Vừa", "Mạnh", "Rất Mạnh"
-                    string[] additionalLevels = { "Rất yếu", "Yếu", "Vừa", "Mạnh", "Rất Mạnh" };
-                    foreach (string level in additionalLevels)
+                    foreach (string level in LevelNames)
                     {
                         Button levelButton = new Button();
                         levelButton.Text = level;
@@ -357,46 +404,22 @@ namespace DATA_CONFIRM
                         levelButton.FlatAppearance.BorderColor = Color.FromArgb(200, 200, 200);
                         levelButton.Click += (s, e) =>
                         {
-                            targetTextBox.Text = levelButton.Text;
+                            targetTextBox.Text = levelButton.Text; // Cập nhật TextBox với mức độ được chọn
                             selectionForm.Close();
                         };
 
-                        int row = buttonIndex / 5;
-                        int col = buttonIndex % 5;
-                        tablePanel.Controls.Add(levelButton, col, row);
-                        buttonIndex++;
-                    }
-
-                    // Thêm các nút mức độ từ Lv0.1 đến Lv5.0
-                    for (double i = 0.1; i <= 5.0; i += 0.1)
-                    {
-                        Button levelButton = new Button();
-                        levelButton.Text = $"Lv{i.ToString("F1", CultureInfo.InvariantCulture)}";
-                        levelButton.Dock = DockStyle.Fill;
-                        levelButton.Margin = new Padding(2);
-                        levelButton.Font = new Font("Arial", 11F);
-                        levelButton.BackColor = Color.White;
-                        levelButton.FlatStyle = FlatStyle.Flat;
-                        levelButton.FlatAppearance.BorderColor = Color.FromArgb(200, 200, 200);
-                        levelButton.Click += (s, e) =>
-                        {
-                            targetTextBox.Text = levelButton.Text;
-                            selectionForm.Close();
-                        };
-
-                        int row = buttonIndex / 5;
-                        int col = buttonIndex % 5;
+                        int row = buttonIndex / tablePanel.ColumnCount;
+                        int col = buttonIndex % tablePanel.ColumnCount;
                         tablePanel.Controls.Add(levelButton, col, row);
                         buttonIndex++;
                     }
                 }
-            
-        
                 else if (type == "PATTERN")
                 {
                     int columns = 5;
                     int rows = 6;
 
+                    // Tạo bảng để hiển thị các mẫu (Pattern)
                     TableLayoutPanel tablePanel = new TableLayoutPanel();
                     tablePanel.Dock = DockStyle.Top;
                     tablePanel.Height = 310;
@@ -414,7 +437,6 @@ namespace DATA_CONFIRM
                     }
 
                     selectionForm.Controls.Add(tablePanel);
-
                     selectionForm.Size = new Size(500, 400);
 
                     List<string> selectedPatterns = new List<string>();
@@ -441,12 +463,12 @@ namespace DATA_CONFIRM
                             Button clickedButton = (Button)s;
                             if (selectedPatterns.Contains(clickedButton.Text))
                             {
-                                selectedPatterns.Remove(clickedButton.Text);
+                                selectedPatterns.Remove(clickedButton.Text); // Xóa mẫu khỏi danh sách
                                 clickedButton.BackColor = Color.White;
                             }
                             else
                             {
-                                selectedPatterns.Add(clickedButton.Text);
+                                selectedPatterns.Add(clickedButton.Text); // Thêm mẫu vào danh sách
                                 clickedButton.BackColor = Color.LightBlue;
                             }
                         };
@@ -456,6 +478,7 @@ namespace DATA_CONFIRM
                         tablePanel.Controls.Add(patternButton, col, row);
                     }
 
+                    // Nút Xác nhận để lưu các mẫu đã chọn
                     Button btnConfirm = new Button();
                     btnConfirm.Text = "Xác nhận";
                     btnConfirm.Size = new Size(100, 40);
@@ -467,6 +490,7 @@ namespace DATA_CONFIRM
                     btnConfirm.FlatAppearance.BorderColor = Color.FromArgb(200, 200, 204);
                     selectionForm.Controls.Add(btnConfirm);
 
+                    // Nút Hủy bỏ để đóng form
                     Button btnCancel = new Button();
                     btnCancel.Text = "Hủy bỏ";
                     btnCancel.Size = new Size(100, 40);
@@ -482,7 +506,7 @@ namespace DATA_CONFIRM
                     {
                         if (selectedPatterns.Count > 0)
                         {
-                            targetTextBox.Text = string.Join(", ", selectedPatterns.OrderBy(p => p));
+                            targetTextBox.Text = string.Join(", ", selectedPatterns.OrderBy(p => p)); // Cập nhật TextBox
                         }
                         else
                         {
@@ -501,6 +525,7 @@ namespace DATA_CONFIRM
                     int columns = 6;
                     int rows = 10;
 
+                    // Tạo bảng để hiển thị các lỗi
                     TableLayoutPanel tablePanel = new TableLayoutPanel();
                     tablePanel.Size = new Size(740, rows * 65);
                     tablePanel.Location = new Point(5, 5);
@@ -518,10 +543,7 @@ namespace DATA_CONFIRM
                     }
 
                     selectionForm.Controls.Add(tablePanel);
-
-                    int formWidth = 760;
-                    int formHeight = (rows * 65) + 50;
-                    selectionForm.Size = new Size(formWidth, formHeight);
+                    selectionForm.Size = new Size(760, (rows * 65) + 50);
 
                     for (int i = 0; i < ErrorNames.Length; i++)
                     {
@@ -538,7 +560,7 @@ namespace DATA_CONFIRM
                         errorButton.FlatAppearance.BorderColor = Color.FromArgb(200, 200, 200);
                         errorButton.Click += (s, e) =>
                         {
-                            targetTextBox.Text = errorButton.Text;
+                            targetTextBox.Text = errorButton.Text; // Cập nhật TextBox với lỗi được chọn
                             selectionForm.Close();
                         };
 
@@ -548,10 +570,23 @@ namespace DATA_CONFIRM
                     }
                 }
 
-                selectionForm.ShowDialog(this);
+                selectionForm.ShowDialog(this); // Hiển thị form chọn
             }
         }
 
+        // Xử lý sự kiện click vào nút chọn vị trí lỗi
+        private void BtnSelectPosition_Click(object sender, EventArgs e)
+        {
+            using (PositionSelectionForm positionForm = new PositionSelectionForm())
+            {
+                if (positionForm.ShowDialog(this) == DialogResult.OK)
+                {
+                    txtSelectedPosition.Text = string.Join(", ", positionForm.SelectedPositions.OrderBy(p => p)); // Cập nhật TextBox với các vị trí được chọn
+                }
+            }
+        }
+
+        // Cập nhật số lượng cell đã lưu trong file CSV
         private void UpdateAPNCount()
         {
             try
@@ -585,16 +620,19 @@ namespace DATA_CONFIRM
             }
         }
 
+        // Xử lý sự kiện lưu dữ liệu vào file CSV
         private void BtnSave_Click(object sender, EventArgs e)
         {
             try
             {
+                // Kiểm tra xem có dữ liệu nào được nhập không
                 bool hasData = !string.IsNullOrEmpty(txtAPN.Text) ||
                                txtCoordinatesX.Any(txt => !string.IsNullOrEmpty(txt.Text)) ||
                                txtCoordinatesY.Any(txt => !string.IsNullOrEmpty(txt.Text)) ||
                                !string.IsNullOrEmpty(txtSelectedError.Text) ||
                                !string.IsNullOrEmpty(txtSelectedLevel.Text) ||
-                               !string.IsNullOrEmpty(txtSelectedPattern.Text);
+                               !string.IsNullOrEmpty(txtSelectedPattern.Text) ||
+                               !string.IsNullOrEmpty(txtSelectedPosition.Text);
 
                 if (!hasData)
                 {
@@ -612,23 +650,24 @@ namespace DATA_CONFIRM
 
                 if (!Directory.Exists(folderPath))
                 {
-                    Directory.CreateDirectory(folderPath);
+                    Directory.CreateDirectory(folderPath); // Tạo thư mục nếu chưa tồn tại
                 }
 
+                // Tạo danh sách các cột dữ liệu để lưu vào CSV
                 List<string> csvColumns = new List<string>
                 {
                     $"\"{txtAPN.Text.Replace("\"", "\"\"")}\""
                 };
 
-                for (int i = 0; i < 5; i++)
+                for (int i = 0; i < 4; i++)
                 {
                     string xyPair = string.IsNullOrEmpty(txtCoordinatesX[i].Text) && string.IsNullOrEmpty(txtCoordinatesY[i].Text)
                         ? ""
                         : $"{txtCoordinatesX[i].Text},{txtCoordinatesY[i].Text}";
                     csvColumns.Add($"\"{xyPair}\"");
                 }
-
                 csvColumns.Add($"\"{txtSelectedError.Text.Replace("\"", "\"\"")}\"");
+                csvColumns.Add($"\"{txtSelectedPosition.Text.Replace("\"", "\"\"")}\"");
                 csvColumns.Add($"\"{txtSelectedLevel.Text.Replace("\"", "\"\"")}\"");
                 csvColumns.Add($"\"{txtSelectedPattern.Text.Replace("\"", "\"\"")}\"");
                 csvColumns.Add($"\"{currentTime}\"");
@@ -641,9 +680,9 @@ namespace DATA_CONFIRM
                 {
                     if (!fileExists)
                     {
-                        writer.WriteLine("\"APN\",\"X1,Y1\",\"X2,Y2\",\"X3,Y3\",\"X4,Y4\",\"X5,Y5\",\"DEFECT\",\"LEVEL\",\"PATTERN\",\"EVENTTIME\"");
+                        writer.WriteLine("\"APN\",\"X1,Y1\",\"X2,Y2\",\"X3,Y3\",\"X4,Y4\",\"DEFECT\",\"MAPPING\",\"LEVEL\",\"PATTERN\",\"EVENTTIME\""); // Viết tiêu đề CSV
                     }
-                    writer.WriteLine(csvLine);
+                    writer.WriteLine(csvLine); // Viết dòng dữ liệu
                 }
 
                 lblDateTime.Text = "Đã lưu gần đây: " + currentTime;
@@ -657,12 +696,14 @@ namespace DATA_CONFIRM
 
                 UpdateAPNCount();
 
+                // Xóa các trường dữ liệu sau khi lưu
                 txtAPN.Clear();
                 foreach (var txt in txtCoordinatesX) txt.Clear();
                 foreach (var txt in txtCoordinatesY) txt.Clear();
                 txtSelectedError.Clear();
                 txtSelectedPattern.Clear();
                 txtSelectedLevel.Clear();
+                txtSelectedPosition.Clear();
 
                 txtAPN.Focus();
             }
@@ -674,6 +715,7 @@ namespace DATA_CONFIRM
             }
         }
 
+        // Xử lý sự kiện click vào nhãn trạng thái để mở thư mục chứa file CSV
         private void LblStatus_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             try
@@ -681,7 +723,7 @@ namespace DATA_CONFIRM
                 string folderPath = lblStatus.Tag as string;
                 if (!string.IsNullOrEmpty(folderPath) && Directory.Exists(folderPath))
                 {
-                    Process.Start("explorer.exe", folderPath);
+                    Process.Start("explorer.exe", folderPath); // Mở thư mục
                 }
                 else
                 {
@@ -694,6 +736,7 @@ namespace DATA_CONFIRM
             }
         }
 
+        // Xử lý sự kiện xóa toàn bộ dữ liệu nhập
         private void BtnReset_Click(object sender, EventArgs e)
         {
             txtAPN.Clear();
@@ -702,31 +745,37 @@ namespace DATA_CONFIRM
             txtSelectedError.Clear();
             txtSelectedPattern.Clear();
             txtSelectedLevel.Clear();
+            txtSelectedPosition.Clear();
             lblStatus.Text = "Đã xóa tất cả dữ liệu";
             lblStatus.LinkArea = new LinkArea(0, 0);
             lblStatus.ForeColor = Color.Red;
         }
 
+        // Xử lý sự kiện click vào TextBox để kích hoạt bàn phím số
         private void TextBox_Click(object sender, EventArgs e)
         {
             activeTextBox = (TextBox)sender;
         }
 
+        // Xử lý sự kiện click vào nút chọn Tên lỗi
         private void BtnSelectError_Click(object sender, EventArgs e)
         {
             ShowSelectionForm("TÊN LỖI", txtSelectedError);
         }
 
+        // Xử lý sự kiện click vào nút chọn Mức độ
         private void BtnSelectLevel_Click(object sender, EventArgs e)
         {
             ShowSelectionForm("MỨC ĐỘ", txtSelectedLevel);
         }
 
+        // Xử lý sự kiện click vào nút chọn Pattern
         private void BtnSelectPattern_Click(object sender, EventArgs e)
         {
             ShowSelectionForm("PATTERN", txtSelectedPattern);
         }
 
+        // Kiểm tra đầu vào số cho các TextBox tọa độ
         private void ValidateNumericInput(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '.')
@@ -737,11 +786,12 @@ namespace DATA_CONFIRM
 
             if (e.KeyChar == '.' && ((TextBox)sender).Text.IndexOf('.') > -1)
             {
-                e.Handled = true;
+                e.Handled = true; // Ngăn nhập nhiều dấu chấm
             }
         }
     }
 
+    // Lớp tùy chỉnh để hiển thị nhãn theo chiều dọc
     public class VerticalLabel : Label
     {
         private string _authorText;
@@ -756,7 +806,7 @@ namespace DATA_CONFIRM
         {
             SizeF textSize = pe.Graphics.MeasureString(_authorText, Font);
             pe.Graphics.TranslateTransform(Width / 2f, Height / 2f);
-            pe.Graphics.RotateTransform(270); // Đổi từ 90 thành 270 để xoay từ dưới lên
+            pe.Graphics.RotateTransform(270); // Xoay văn bản 270 độ
             using (StringFormat format = new StringFormat())
             {
                 format.Alignment = StringAlignment.Center;
