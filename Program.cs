@@ -28,22 +28,66 @@ namespace DATA_CONFIRM
         // Danh sách các lỗi có thể chọn
         private static readonly string[] ErrorNames = new string[]
         {
-            "Lỗi hàn thiếu", "Lỗi hàn thừa", "Lỗi hàn lệch", "Lỗi hàn nguội",
-            "Lỗi hàn bị vỡ", "Lỗi hàn bong tróc", "Lỗi hàn không sáng", "Lỗi hàn bị oxy hóa",
-            "Lỗi hàn bị chảy", "Lỗi hàn bị khô", "Lỗi hàn bị đen", "Lỗi hàn bị xỉ",
-            "Lỗi hàn bị bẩn", "Lỗi hàn không đều", "Lỗi hàn bị rỗ", "Lỗi hàn bị bọt khí",
-            "Lỗi linh kiện sai", "Lỗi linh kiện thiếu", "Lỗi linh kiện lệch", "Lỗi linh kiện ngược",
-            "Lỗi linh kiện giả", "Lỗi linh kiện kém chất lượng", "Lỗi linh kiện bị vỡ", "Lỗi linh kiện bị xước",
-            "Lỗi linh kiện bị oxy hóa", "Lỗi linh kiện bị cong", "Lỗi linh kiện bị gãy", "Lỗi linh kiện bị rơ",
-            "Lỗi PCB bị nứt", "Lỗi PCB bị cong", "Lỗi PCB bị xước", "Lỗi PCB bị vỡ",
-            "Lỗi PCB bị ố vàng", "Lỗi PCB bị ẩm", "Lỗi PCB bị bong", "Lỗi PCB bị chảy",
-            "Lỗi PCB bị biến dạng", "Lỗi PCB sai kích thước", "Lỗi PCB sai layout", "Lỗi PCB thiếu lỗ",
-            "Lỗi đứt mạch", "Lỗi chập mạch", "Lỗi thông mạch", "Lỗi ngắn mạch",
-            "Lỗi mạch hở", "Lỗi mạch bị đứt", "Lỗi mạch bị lỗi", "Lỗi mạch không thông",
-            "Lỗi mạch bị nhiễu", "Lỗi mạch bị sai", "Lỗi mạch bị yếu", "Lỗi mạch không ổn định",
-            "Lỗi bẩn", "Lỗi xước", "Lỗi biến dạng", "Lỗi kích thước",
-            "Lỗi màu sắc", "Lỗi bề mặt", "Lỗi độ dày", "Lỗi độ phẳng",
-            "Lỗi vết ố", "Lỗi vết bẩn", "Lỗi vết xước", "Lỗi vết lõm"
+            "Lỗi 01",
+            "Lỗi 02",
+            "Lỗi 03",
+            "Lỗi 04",
+            "Lỗi 05",
+            "Lỗi 06",
+            "Lỗi 07",
+            "Lỗi 08",
+            "Lỗi 09",
+            "Lỗi 10",
+            "Lỗi 11",
+            "Lỗi 12",
+            "Lỗi 13",
+            "Lỗi 14",
+            "Lỗi 15",
+            "Lỗi 16",
+            "Lỗi 17",
+            "Lỗi 18",
+            "Lỗi 19",
+            "Lỗi 20",
+            "Lỗi 21",
+            "Lỗi 22",
+            "Lỗi 23",
+            "Lỗi 24",
+            "Lỗi 25",
+            "Lỗi 26",
+            "Lỗi 27",
+            "Lỗi 28",
+            "Lỗi 29",
+            "Lỗi 30",
+            "Lỗi 31",
+            "Lỗi 32",
+            "Lỗi 33",
+            "Lỗi 34",
+            "Lỗi 35",
+            "Lỗi 36",
+            "Lỗi 37",
+            "Lỗi 38",
+            "Lỗi 39",
+            "Lỗi 40",
+            "Lỗi 41",
+            "Lỗi 42",
+            "Lỗi 43",
+            "Lỗi 44",
+            "Lỗi 45",
+            "Lỗi 46",
+            "Lỗi 47",
+            "Lỗi 48",
+            "Lỗi 49",
+            "Lỗi 50",
+            "Lỗi 51",
+            "Lỗi 52",
+            "Lỗi 53",
+            "Lỗi 54",
+            "Lỗi 55",
+            "Lỗi 56",
+            "Lỗi 57",
+            "Lỗi 58",
+            "Lỗi 59",
+            "Lỗi 60"
         };
 
         // Danh sách các mẫu (Pattern) có thể chọn
@@ -54,7 +98,9 @@ namespace DATA_CONFIRM
             "Pattern 11", "Pattern 12", "Pattern 13", "Pattern 14", "Pattern 15",
             "Pattern 16", "Pattern 17", "Pattern 18", "Pattern 19", "Pattern 20",
             "Pattern 21", "Pattern 22", "Pattern 23", "Pattern 24", "Pattern 25",
-            "Pattern 26", "Pattern 27", "Pattern 28", "Pattern 29", "Pattern 30"
+            "Pattern 26", "Pattern 27", "Pattern 28", "Pattern 29", "Pattern 30",
+            "Pattern 31", "Pattern 32", "Pattern 33", "Pattern 34", "Pattern 35",
+            "Pattern 36", "Pattern 37", "Pattern 38", "Pattern 39", "Pattern 40"
         };
 
         // Danh sách các mức độ (Level) có thể chọn
@@ -417,12 +463,12 @@ namespace DATA_CONFIRM
                 else if (type == "PATTERN")
                 {
                     int columns = 5;
-                    int rows = 6;
+                    int rows = 8;
 
                     // Tạo bảng để hiển thị các mẫu (Pattern)
                     TableLayoutPanel tablePanel = new TableLayoutPanel();
                     tablePanel.Dock = DockStyle.Top;
-                    tablePanel.Height = 310;
+                    tablePanel.Height = 410;
                     tablePanel.ColumnCount = columns;
                     tablePanel.RowCount = rows;
                     tablePanel.Padding = new Padding(5);
@@ -437,7 +483,7 @@ namespace DATA_CONFIRM
                     }
 
                     selectionForm.Controls.Add(tablePanel);
-                    selectionForm.Size = new Size(500, 400);
+                    selectionForm.Size = new Size(500, 500);
 
                     List<string> selectedPatterns = new List<string>();
                     if (!string.IsNullOrEmpty(targetTextBox.Text))
@@ -482,7 +528,7 @@ namespace DATA_CONFIRM
                     Button btnConfirm = new Button();
                     btnConfirm.Text = "Xác nhận";
                     btnConfirm.Size = new Size(100, 40);
-                    btnConfirm.Location = new Point(130, 315);
+                    btnConfirm.Location = new Point(130, 415);
                     btnConfirm.BackColor = Color.White;
                     btnConfirm.Font = new Font("Arial", 12F);
                     btnConfirm.FlatStyle = FlatStyle.Flat;
@@ -494,7 +540,7 @@ namespace DATA_CONFIRM
                     Button btnCancel = new Button();
                     btnCancel.Text = "Hủy bỏ";
                     btnCancel.Size = new Size(100, 40);
-                    btnCancel.Location = new Point(250, 315);
+                    btnCancel.Location = new Point(250, 415);
                     btnCancel.BackColor = Color.White;
                     btnCancel.Font = new Font("Arial", 12F);
                     btnCancel.FlatStyle = FlatStyle.Flat;
