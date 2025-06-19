@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq; // Thêm namespace để sử dụng phương thức .Any() và .Join()
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -31,42 +31,65 @@ namespace DATA_CONFIRM
             this.FormBorderStyle = FormBorderStyle.FixedSingle; // Không cho phép thay đổi kích thước form
             this.MaximizeBox = false; // Ẩn nút phóng to
             this.MinimizeBox = false; // Ẩn nút thu nhỏ
-            this.Size = new Size(340, 420); // Đặt kích thước form
+            // Đặt ClientSize theo kích thước 300x500 (sẽ được điều chỉnh lại sau)
+            this.ClientSize = new Size(300, 500);
 
             SelectedPositions = new List<string>(); // Khởi tạo danh sách lưu các vị trí được chọn
 
-            // Tạo panel để vẽ lưới 4x4 và cho phép người dùng chọn vị trí
+            // Tạo panel để vẽ lưới 4x4 với các ô có tỷ lệ rộng 4, cao 6
             productPanel = new Panel();
-            productPanel.Size = new Size(300, 300); // Kích thước của panel
-            productPanel.Location = new Point((this.ClientSize.Width - productPanel.Width) / 2, 10); // Căn giữa panel theo chiều ngang
+            int panelWidth = this.ClientSize.Width - 20; // Chiều rộng panel dựa trên form
+            // Tính toán panelHeight để các ô có tỷ lệ 4x6 (panelHeight = panelWidth * (chiều cao ô / chiều rộng ô))
+            // Tỷ lệ (4x6) cho từng ô trong lưới 4x4 tổng thể sẽ làm cho panel có tỷ lệ chiều cao lớn hơn chiều rộng.
+            // (4 hàng * 6 đơn vị chiều cao) / (4 cột * 4 đơn vị chiều rộng) = 24 / 16 = 1.5
+            int panelHeight = (int)(panelWidth * (6.0 / 4.0));
+            productPanel.Size = new Size(panelWidth, panelHeight);
+            // Căn giữa panel ở phía trên
+            productPanel.Location = new Point((this.ClientSize.Width - productPanel.Width) / 2, 20);
             productPanel.BorderStyle = BorderStyle.FixedSingle; // Đặt viền cho panel
             productPanel.Click += ProductPanel_Click; // Gán sự kiện click để xử lý chọn ô
             productPanel.Paint += ProductPanel_Paint; // Gán sự kiện vẽ để hiển thị lưới và đánh dấu ô
             this.Controls.Add(productPanel); // Thêm panel vào form
 
-            // Tạo nút "Xác nhận" để xác nhận các vị trí đã chọn
+            // --- Giữ nguyên bố cục các nút bấm như ban đầu ---
+
+            // Tạo nút "Xác nhận"
             Button btnConfirm = new Button();
             btnConfirm.Text = "Xác nhận";
             btnConfirm.Size = new Size(80, 30);
-            btnConfirm.Location = new Point(productPanel.Location.X + 45, productPanel.Bottom + 20); // Đặt vị trí nút dưới panel
-            btnConfirm.Click += (s, e) =>
-            {
-                this.DialogResult = DialogResult.OK; // Đặt kết quả trả về là OK
-                this.Close(); // Đóng form
-            };
-            this.Controls.Add(btnConfirm); // Thêm nút vào form
 
-            // Tạo nút "Hủy bỏ" để hủy thao tác chọn vị trí
+            // Tạo nút "Hủy bỏ"
             Button btnCancel = new Button();
             btnCancel.Text = "Hủy bỏ";
             btnCancel.Size = new Size(80, 30);
-            btnCancel.Location = new Point(btnConfirm.Right + 10, btnConfirm.Location.Y); // Đặt cạnh nút Xác nhận
+
+            // Vị trí Y được đặt bên dưới panel
+            int buttonY = productPanel.Bottom + 20;
+
+            // Tính toán vị trí X để căn giữa cả hai nút nằm ngang
+            int totalButtonWidth = btnConfirm.Width + btnCancel.Width + 10; // 10 là khoảng cách
+            int buttonStartX = (this.ClientSize.Width - totalButtonWidth) / 2;
+
+            btnConfirm.Location = new Point(buttonStartX, buttonY);
+            btnCancel.Location = new Point(btnConfirm.Right + 10, buttonY);
+
+            // Gán sự kiện và thêm các nút vào form
+            btnConfirm.Click += (s, e) =>
+            {
+                this.DialogResult = DialogResult.OK;
+                this.Close();
+            };
+            this.Controls.Add(btnConfirm);
+
             btnCancel.Click += (s, e) =>
             {
-                this.DialogResult = DialogResult.Cancel; // Đặt kết quả trả về là Cancel
-                this.Close(); // Đóng form
+                this.DialogResult = DialogResult.Cancel;
+                this.Close();
             };
-            this.Controls.Add(btnCancel); // Thêm nút vào form
+            this.Controls.Add(btnCancel);
+
+            // Điều chỉnh lại chiều cao form cho vừa vặn với panel và các nút
+            this.ClientSize = new Size(this.ClientSize.Width, btnCancel.Bottom + 20);
 
             // Cố gắng tải biểu tượng (icon) cho form từ tài nguyên
             try
@@ -136,14 +159,15 @@ namespace DATA_CONFIRM
             int cellHeight = panelHeight / 4; // Chiều cao mỗi ô
 
             // Vẽ lưới 4x4
-            using (Pen gridPen = new Pen(Color.LightGray, 1)) // Bút vẽ màu xám nhạt
+            using (Pen gridPen = new Pen(Color.FromArgb(181,181,181), 2)) // Bút vẽ màu xám nhạt
             {
-                for (int i = 0; i <= 4; i++)
+                for (int i = 0; i <= 4; i++) // 4 đường dọc cho 4 cột
                 {
-                    // Vẽ các đường ngang
-                    g.DrawLine(gridPen, 0, i * cellHeight, panelWidth, i * cellHeight);
-                    // Vẽ các đường dọc
                     g.DrawLine(gridPen, i * cellWidth, 0, i * cellWidth, panelHeight);
+                }
+                for (int i = 0; i <= 4; i++) // 4 đường ngang cho 4 hàng
+                {
+                    g.DrawLine(gridPen, 0, i * cellHeight, panelWidth, i * cellHeight);
                 }
             }
 
@@ -152,7 +176,9 @@ namespace DATA_CONFIRM
             {
                 sf.Alignment = StringAlignment.Center; // Căn giữa ngang
                 sf.LineAlignment = StringAlignment.Center; // Căn giữa dọc
-                using (Font cellFont = new Font("Arial", 12, FontStyle.Bold)) // Font chữ cho tên ô
+                // Tự động điều chỉnh kích thước font chữ cho vừa với ô
+                float fontSize = Math.Max(12, cellWidth / 5);
+                using (Font cellFont = new Font("Arial", fontSize, FontStyle.Bold))
                 using (Brush textBrush = new SolidBrush(Color.DarkBlue)) // Màu chữ xanh đậm
                 {
                     for (int r = 0; r < 4; r++)
@@ -200,7 +226,14 @@ namespace DATA_CONFIRM
                         // Vẽ khung đỏ quanh ô
                         using (Pen highlightPen = new Pen(Color.Red, 2)) // Bút vẽ màu đỏ, độ dày 2px
                         {
-                            g.DrawRectangle(highlightPen, selectedRect); // Vẽ khung
+                            // Điều chỉnh hình chữ nhật để vẽ đường viền nhỏ hơn một chút
+                            // và căn giữa trong ô để tránh bị cắt.
+                            // Độ dày của bút là 2, vì vậy chúng ta điều chỉnh 1 pixel mỗi bên.
+                            g.DrawRectangle(highlightPen,
+                                selectedRect.X + highlightPen.Width / 2,
+                                selectedRect.Y + highlightPen.Width / 2,
+                                selectedRect.Width - highlightPen.Width,
+                                selectedRect.Height - highlightPen.Width);
                         }
                     }
                 }
