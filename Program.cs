@@ -288,8 +288,9 @@ namespace DATA_CONFIRM
             // Nút Xác nhận để lưu dữ liệu
             btnSave = new Button();
             btnSave.Text = "XÁC NHẬN";
+            btnSave.ForeColor = Color.Green;
             btnSave.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnSave.Location = new Point(110, 400);
+            btnSave.Location = new Point(110, 395);
             btnSave.Size = new Size(100, 40);
             btnSave.Click += BtnSave_Click; // Gán sự kiện click để lưu dữ liệu
             this.Controls.Add(btnSave);
@@ -297,8 +298,9 @@ namespace DATA_CONFIRM
             // Nút Reset để xóa dữ liệu nhập
             btnReset = new Button();
             btnReset.Text = "RESET";
+            btnReset.ForeColor = Color.OrangeRed;
             btnReset.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnReset.Location = new Point(230, 400);
+            btnReset.Location = new Point(230, 395);
             btnReset.Size = new Size(100, 40);
             btnReset.Click += BtnReset_Click; // Gán sự kiện click để xóa dữ liệu
             this.Controls.Add(btnReset);
@@ -324,10 +326,11 @@ namespace DATA_CONFIRM
 
             // Nhãn hiển thị số lượng cell đã lưu
             lblAPNCount = new Label();
-            lblAPNCount.Location = new Point(50, 450);
+            lblAPNCount.Location = new Point(60, 440);
             lblAPNCount.Size = new Size(320, 20);
             lblAPNCount.TextAlign = ContentAlignment.MiddleCenter;
             lblAPNCount.Text = "Số cell đã lưu: 0";
+            lblAPNCount.ForeColor = Color.DarkGreen;
             this.Controls.Add(lblAPNCount);
 
             // Gán các sự kiện click cho các nút chọn
@@ -338,7 +341,7 @@ namespace DATA_CONFIRM
             // Nhãn hiển thị tên tác giả (xoay dọc)
             VerticalLabel lblAuthor = new VerticalLabel("Tác giả: Nông Văn Phấn");
             lblAuthor.Font = new Font("Tahoma", 7F, FontStyle.Regular);
-            lblAuthor.ForeColor = Color.Gray;
+            lblAuthor.ForeColor = Color.Silver;
             lblAuthor.BackColor = Color.Transparent;
             lblAuthor.AutoSize = false;
             lblAuthor.Size = new Size(20, 150);
