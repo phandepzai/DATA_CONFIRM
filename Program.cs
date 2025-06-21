@@ -1,4 +1,5 @@
-﻿using System;
+﻿// Program.cs
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
@@ -100,20 +101,20 @@ namespace DATA_CONFIRM
             "Pattern 21", "Pattern 22", "Pattern 23", "Pattern 24", "Pattern 25",
             "Pattern 26", "Pattern 27", "Pattern 28", "Pattern 29", "Pattern 30",
             "Pattern 31", "Pattern 32", "Pattern 33", "Pattern 34", "Pattern 35",
-            "Pattern 36", "Pattern 37", "Pattern 38", "Pattern 39", "Pattern 40"
+            "Pattern 36", "Pattern 37", "Pattern 38", "Pattern 39", "Pattern 40",
+            "Pattern 41", "Pattern 42", "Pattern 43", "Pattern 44", "Pattern 45",
+            "Pattern 46", "Pattern 47", "Pattern 48", "Pattern 49", "Pattern 50"
         };
 
         // Danh sách các mức độ (Level) có thể chọn
         private static readonly string[] LevelNames = new string[]
         {
-            "Rất yếu", "Yếu", "Vừa", "Mạnh", "Rất Mạnh",
+            "Rất yếu", "Yếu", "Vừa", "Mạnh", "Rất Mạnh","Rất nhẹ", "Nhẹ", "Vừa", "Nặng", "Rất nặng",
             "Lv0.1", "Lv0.2", "Lv0.3", "Lv0.4", "Lv0.5", "Lv0.6", "Lv0.7", "Lv0.8", "Lv0.9", "Lv1.0",
             "Lv1.1", "Lv1.2", "Lv1.3", "Lv1.4", "Lv1.5", "Lv1.6", "Lv1.7", "Lv1.8", "Lv1.9", "Lv2.0",
             "Lv2.1", "Lv2.2", "Lv2.3", "Lv2.4", "Lv2.5", "Lv2.6", "Lv2.7", "Lv2.8", "Lv2.9", "Lv3.0",
             "Lv3.1", "Lv3.2", "Lv3.3", "Lv3.4", "Lv3.5", "Lv3.6", "Lv3.7", "Lv3.8", "Lv3.9", "Lv4.0",
             "Lv4.1", "Lv4.2", "Lv4.3", "Lv4.4", "Lv4.5", "Lv4.6", "Lv4.7", "Lv4.8", "Lv4.9", "Lv5.0",
-            "Rất yếu", "Yếu", "Vừa", "Mạnh", "Rất Mạnh",
-            "Rất yếu", "Yếu", "Vừa", "Mạnh", "Rất Mạnh",
         };
 
         private TextBox txtAPN; // TextBox để nhập mã APN
@@ -133,6 +134,10 @@ namespace DATA_CONFIRM
         private LinkLabel lblStatus; // Nhãn hiển thị trạng thái (thành công/lỗi)
         private Label lblDateTime; // Nhãn hiển thị thời gian lưu gần nhất
         private Label lblAPNCount; // Nhãn hiển thị số lượng cell đã lưu
+
+        // Thêm các biến cho nút DK và BR
+        private Button btnDK;
+        private Button btnBR;
 
         public MainForm()
         {
@@ -255,11 +260,35 @@ namespace DATA_CONFIRM
             // Tạo các nút và TextBox cho Tên lỗi, Mức độ, Pattern
             CreateSelectionControls("TÊN LỖI", 260, ref txtSelectedError, ref btnSelectError);
             CreateSelectionControls("LEVEL", 300, ref txtSelectedLevel, ref btnSelectLevel);
+            txtSelectedLevel.Width = 165; // Thay đổi 350 thành độ dài mong muốn của bạn
             CreateSelectionControls("PATTERN", 340, ref txtSelectedPattern, ref btnSelectPattern);
+
+            // Nút DK
+            btnDK = new Button();
+            btnDK.Text = "DK";
+            btnDK.Location = new Point(txtSelectedLevel.Location.X + txtSelectedLevel.Width + 10, txtSelectedLevel.Location.Y);
+            btnDK.Size = new Size(50, txtSelectedLevel.Height);
+            btnDK.Font = new Font("Arial", 10F, FontStyle.Bold);
+            btnDK.Click += BtnDK_BR_Click;
+            btnDK.BackColor = Color.DimGray; // Đặt màu nền tối cho nút DK (ví dụ: DimGray)
+            btnDK.ForeColor = Color.White; // Đặt màu chữ trắng để dễ nhìn trên nền tối
+            this.Controls.Add(btnDK);
+
+            // Nút BR
+            btnBR = new Button();
+            btnBR.Text = "BR";
+            btnBR.Location = new Point(btnDK.Location.X + btnDK.Width + 5, txtSelectedLevel.Location.Y);
+            btnBR.Size = new Size(50, txtSelectedLevel.Height);
+            btnBR.Font = new Font("Arial", 10F, FontStyle.Bold);
+            btnBR.Click += BtnDK_BR_Click;
+            btnBR.BackColor = Color.LightGray; // Đặt màu nền sáng cho nút BR (ví dụ: LightGray)
+            btnBR.ForeColor = Color.Black; // Đặt màu chữ đen để dễ nhìn trên nền sáng
+            this.Controls.Add(btnBR);
 
             // Nút Xác nhận để lưu dữ liệu
             btnSave = new Button();
             btnSave.Text = "XÁC NHẬN";
+            btnSave.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             btnSave.Location = new Point(100, 400);
             btnSave.Size = new Size(100, 40);
             btnSave.Click += BtnSave_Click; // Gán sự kiện click để lưu dữ liệu
@@ -268,6 +297,7 @@ namespace DATA_CONFIRM
             // Nút Reset để xóa dữ liệu nhập
             btnReset = new Button();
             btnReset.Text = "RESET";
+            btnReset.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             btnReset.Location = new Point(240, 400);
             btnReset.Size = new Size(100, 40);
             btnReset.Click += BtnReset_Click; // Gán sự kiện click để xóa dữ liệu
@@ -463,12 +493,12 @@ namespace DATA_CONFIRM
                 else if (type == "PATTERN")
                 {
                     int columns = 5;
-                    int rows = 8;
+                    int rows = 10;
 
                     // Tạo bảng để hiển thị các mẫu (Pattern)
                     TableLayoutPanel tablePanel = new TableLayoutPanel();
                     tablePanel.Dock = DockStyle.Top;
-                    tablePanel.Height = 410;
+                    tablePanel.Height = 510;
                     tablePanel.ColumnCount = columns;
                     tablePanel.RowCount = rows;
                     tablePanel.Padding = new Padding(5);
@@ -483,7 +513,7 @@ namespace DATA_CONFIRM
                     }
 
                     selectionForm.Controls.Add(tablePanel);
-                    selectionForm.Size = new Size(500, 500);
+                    selectionForm.Size = new Size(600, 600);
 
                     List<string> selectedPatterns = new List<string>();
                     if (!string.IsNullOrEmpty(targetTextBox.Text))
@@ -528,7 +558,7 @@ namespace DATA_CONFIRM
                     Button btnConfirm = new Button();
                     btnConfirm.Text = "Xác nhận";
                     btnConfirm.Size = new Size(100, 40);
-                    btnConfirm.Location = new Point(130, 415);
+                    btnConfirm.Location = new Point(180, 515);
                     btnConfirm.BackColor = Color.White;
                     btnConfirm.Font = new Font("Arial", 12F);
                     btnConfirm.FlatStyle = FlatStyle.Flat;
@@ -540,7 +570,7 @@ namespace DATA_CONFIRM
                     Button btnCancel = new Button();
                     btnCancel.Text = "Hủy bỏ";
                     btnCancel.Size = new Size(100, 40);
-                    btnCancel.Location = new Point(250, 415);
+                    btnCancel.Location = new Point(300, 515);
                     btnCancel.BackColor = Color.White;
                     btnCancel.Font = new Font("Arial", 12F);
                     btnCancel.FlatStyle = FlatStyle.Flat;
@@ -819,6 +849,44 @@ namespace DATA_CONFIRM
         private void BtnSelectPattern_Click(object sender, EventArgs e)
         {
             ShowSelectionForm("PATTERN", txtSelectedPattern);
+        }
+
+        // Sự kiện click chung cho nút DK và BR
+        private void BtnDK_BR_Click(object sender, EventArgs e)
+        {
+            Button clickedButton = (Button)sender;
+            // Kiểm tra xem txtSelectedLevel đã có giá trị gì chưa
+            if (string.IsNullOrEmpty(txtSelectedLevel.Text))
+            {
+                txtSelectedLevel.Text = clickedButton.Text;
+            }
+            else
+            {
+                // Nếu đã có, thêm vào sau dấu phẩy (hoặc thay thế nếu muốn)
+                // Hiện tại, tôi sẽ nối thêm vào nếu chưa có, hoặc thay thế nếu đã có DK/BR
+                if (txtSelectedLevel.Text.Contains("DK") || txtSelectedLevel.Text.Contains("BR"))
+                {
+                    // Nếu đã có DK hoặc BR, hãy thay thế chúng
+                    string currentText = txtSelectedLevel.Text;
+                    currentText = currentText.Replace("DK", "").Replace("BR", "").Trim();
+                    if (!string.IsNullOrEmpty(currentText) && !currentText.EndsWith(","))
+                    {
+                        txtSelectedLevel.Text = currentText + " " + clickedButton.Text;
+                    }
+                    else if (!string.IsNullOrEmpty(currentText))
+                    {
+                        txtSelectedLevel.Text = currentText + clickedButton.Text;
+                    }
+                    else
+                    {
+                        txtSelectedLevel.Text = clickedButton.Text;
+                    }
+                }
+                else
+                {
+                    txtSelectedLevel.Text += " " + clickedButton.Text;
+                }
+            }
         }
 
         // Kiểm tra đầu vào số cho các TextBox tọa độ
