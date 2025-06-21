@@ -260,7 +260,7 @@ namespace DATA_CONFIRM
             // Tạo các nút và TextBox cho Tên lỗi, Mức độ, Pattern
             CreateSelectionControls("TÊN LỖI", 260, ref txtSelectedError, ref btnSelectError);
             CreateSelectionControls("LEVEL", 300, ref txtSelectedLevel, ref btnSelectLevel);
-            txtSelectedLevel.Width = 165; // Thay đổi 350 thành độ dài mong muốn của bạn
+            txtSelectedLevel.Width = 165; // Thay đổi 165 thành độ dài mong muốn của bạn
             CreateSelectionControls("PATTERN", 340, ref txtSelectedPattern, ref btnSelectPattern);
 
             // Nút DK
@@ -289,7 +289,7 @@ namespace DATA_CONFIRM
             btnSave = new Button();
             btnSave.Text = "XÁC NHẬN";
             btnSave.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnSave.Location = new Point(100, 400);
+            btnSave.Location = new Point(110, 400);
             btnSave.Size = new Size(100, 40);
             btnSave.Click += BtnSave_Click; // Gán sự kiện click để lưu dữ liệu
             this.Controls.Add(btnSave);
@@ -298,7 +298,7 @@ namespace DATA_CONFIRM
             btnReset = new Button();
             btnReset.Text = "RESET";
             btnReset.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnReset.Location = new Point(240, 400);
+            btnReset.Location = new Point(230, 400);
             btnReset.Size = new Size(100, 40);
             btnReset.Click += BtnReset_Click; // Gán sự kiện click để xóa dữ liệu
             this.Controls.Add(btnReset);
@@ -780,7 +780,6 @@ namespace DATA_CONFIRM
                 txtSelectedPattern.Clear();
                 txtSelectedLevel.Clear();
                 txtSelectedPosition.Clear();
-
                 txtAPN.Focus();
             }
             catch (Exception ex)
@@ -825,6 +824,7 @@ namespace DATA_CONFIRM
             lblStatus.Text = "Đã xóa tất cả dữ liệu";
             lblStatus.LinkArea = new LinkArea(0, 0);
             lblStatus.ForeColor = Color.Red;
+            txtAPN.Focus();
         }
 
         // Xử lý sự kiện click vào TextBox để kích hoạt bàn phím số
