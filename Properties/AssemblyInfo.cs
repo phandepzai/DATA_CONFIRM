@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("FORM NHAP DATA")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyDescription("FORM NHAP DATA by Nông Văn Phấn")]
+[assembly: AssemblyConfiguration("Nông Văn Phấn")]
+[assembly: AssemblyCompany("Nông Văn Phấn")]
 [assembly: AssemblyProduct("FORM NHAP DATA")]
-[assembly: AssemblyCopyright("Copyright ©  2025")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCopyright("Copyright © 2025 Nông Văn Phấn")]
+[assembly: AssemblyTrademark("Nông Văn Phấn")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
