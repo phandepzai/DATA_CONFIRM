@@ -1,4 +1,4 @@
-﻿// Program.cs
+// Program.cs
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -307,7 +307,7 @@ namespace DATA_CONFIRM
 
             // Nhãn hiển thị thời gian lưu gần nhất
             lblDateTime = new Label();
-            lblDateTime.Location = new Point(20, 470);
+            lblDateTime.Location = new Point(20, 465);
             lblDateTime.Size = new Size(320, 20);
             lblDateTime.TextAlign = ContentAlignment.MiddleLeft;
             this.Controls.Add(lblDateTime);
@@ -315,7 +315,7 @@ namespace DATA_CONFIRM
             // Nhãn hiển thị trạng thái (thành công/lỗi)
             lblStatus = new LinkLabel();
             lblStatus.Location = new Point(20, 480);
-            lblStatus.Size = new Size(320, 60);
+            lblStatus.Size = new Size(390, 60);
             lblStatus.TextAlign = ContentAlignment.MiddleLeft;
             lblStatus.AutoSize = false;
             lblStatus.LinkColor = Color.Blue;
