@@ -187,6 +187,7 @@ namespace DATA_CONFIRM
             txtAPN.Size = new Size(360, 40);
             txtAPN.Font = new Font("Arial", 15F);
             txtAPN.MaxLength = 300;
+            txtAPN.CharacterCasing = CharacterCasing.Upper; // Tự động chuyển thành chữ in hoa
             txtAPN.KeyDown += (s, e) =>
             {
                 if (e.KeyCode == Keys.Enter)
@@ -939,3 +940,4 @@ namespace DATA_CONFIRM
         }
     }
 }
+
